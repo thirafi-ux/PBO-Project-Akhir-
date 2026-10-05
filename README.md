@@ -1,4 +1,4 @@
-# Panduan Presentasi SIAKAD (OOP)
+# SIAKAD (OOP)
 
 Jalankan: `python main.py` (Python 3, tanpa install apa pun).
 Data tersimpan otomatis di `data/siakad_data.json` (bisa dibuka dengan Notepad). Hapus file itu kalau mau reset ke data awal.
@@ -118,7 +118,7 @@ classDiagram
     SIAKAD ..> Database : memakai
 ```
 
-## Pembuktian konsep OOP (tunjukkan di kode)
+## Pembuktian konsep OOP
 | Konsep | Di mana | Penjelasan singkat |
 |---|---|---|
 | Abstraksi | `Pengguna(ABC)` + `menu()` abstrak | Class induk yang tidak bisa dibuat langsung, hanya jadi cetakan |
@@ -148,7 +148,7 @@ classDiagram
 | Kelola Data Mahasiswa / Dosen / Mata Kuliah / Kelas / Jadwal | `Admin.kelola_...()` |
 | Lihat Laporan Akademik | `LaporanAkademik.tampilkan()` |
 
-## Skenario demo (sekitar 5 menit)
+## Demo
 1. **Mahasiswa 230001** -> Isi KRS -> pilih `IF301 PBO Lanjut` -> **gagal: prasyarat IF202 belum lulus** (bukti Cek Prasyarat).
 2. Masih di Isi KRS -> pilih `IF205 RPL` -> **gagal: kuota penuh (1/1)** (bukti Cek Kuota).
 3. Lihat Nilai/KHS -> tampil IPS per semester dan IPK. Lihat Presensi dan Jadwal.
@@ -156,8 +156,3 @@ classDiagram
 5. **Login ulang sebagai mahasiswa** -> KHS sekarang ada semester 3 dan IPK berubah (bukti antar-class terhubung).
 6. **Admin** -> Lihat Laporan Akademik, lalu coba Tambah Mahasiswa.
 7. Tutup program, buka lagi: data masih ada. Buka `data/siakad_data.json` untuk menunjukkan datanya benar-benar tersimpan.
-
-## Jawaban kalau dosen bertanya
-- **Kenapa Pengguna dibuat abstrak?** Karena tidak ada "pengguna umum", yang ada hanya mahasiswa, dosen, atau admin.
-- **Bedanya composition dan aggregation?** KRS milik mahasiswa itu composition (tanpa mahasiswa, KRS tidak berarti). Peserta di kelas itu aggregation (mahasiswa tetap ada walau kelasnya dihapus).
-- **Mana buktinya polymorphism?** `akun.menu(self)` dipanggil sama untuk semua akun, tapi menu yang tampil berbeda.
