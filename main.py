@@ -28,12 +28,7 @@ FILE_JSON = "data_rental.json"
 
 
 # ----------------------------------------------------------
-# 1. KENDARAAN  (ini si "bos besar" untuk semua jenis kendaraan)
-#
-# Class ini ibarat formulir kosong yang berisi hal-hal yang dimiliki SEMUA
-# kendaraan: nama, plat, harga, mesin, dll. Kita nggak pernah menyewakan
-# "kendaraan" secara umum, yang disewakan itu Avanza, Brio, Tesla, dst.
-# Makanya class ini disebu  t induk (parent): jadi dasar buat class lain.
+# 1. KENDARAAN
 # ----------------------------------------------------------
 class Kendaraan:
     def __init__(self, nama, plat, harga, jenis_mesin):
