@@ -1,10 +1,5 @@
 # ==========================================================
-# SISTEM RENTAL MOBIL - versi dengan penjelasan lengkap
-#
-# Ini kode yang SAMA dengan rental_mobil.py, bedanya aku tambahin komentar
-# di mana-mana supaya kamu paham kenapa tiap bagian ditulis begitu.
-#
-# Biar nggak bingung, ini kamus kecilnya dulu:
+# SISTEM RENTAL MOBIL
 #
 #   PUBLIC     -> ditulis biasa:  self.nama
 #                 siapa pun boleh baca dan ubah. Ibarat papan nama di depan toko.
@@ -25,19 +20,11 @@
 #                 Contoh: semua kendaraan PASTI punya biaya sewa, tapi cara
 #                 menghitungnya diserahkan ke masing-masing jenis kendaraan.
 #
-# Catatan jujur soal Python: aturan public/protected/private di Python itu
-# lebih ke KESEPAKATAN antar programmer, bukan gembok sungguhan. Satu garis
-# bawah cuma peringatan. Dua garis bawah memang agak lebih sulit diakses
-# (Python mengubah namanya diam-diam, namanya name mangling), tapi tetap
-# bukan benteng. Intinya: kita yang disiplin mengikuti aturannya.
-#
-# Bagian yang bertanda "# TAMBAHAN" adalah fitur baru (menu + JSON).
-# Jumlah class tetap 13.
 # ==========================================================
 import json
 import os
 
-FILE_JSON = "data_rental.json"      # TAMBAHAN: nama file tempat data disimpan
+FILE_JSON = "data_rental.json"
 
 
 # ----------------------------------------------------------
@@ -88,7 +75,7 @@ class Kendaraan:
         # Di sini self.mesin.info() memanggil method milik objek Mesin.
         return f"{self.nama} [{self.plat}] | {self.bahan_bakar()} | Rp{self.__harga:,.0f}/hari | {self.mesin.info()}"
 
-    def to_dict(self):                        # TAMBAHAN: mengubah data kendaraan jadi "kamus" supaya bisa ditulis ke JSON
+    def to_dict(self):
         return {"tipe": type(self).__name__, "nama": self.nama, "plat": self.plat,
                 "harga": self.__harga, "kondisi": self._kondisi,
                 "tersedia": self.tersedia, "mesin": self.mesin.jenis}
@@ -96,11 +83,6 @@ class Kendaraan:
 
 # ----------------------------------------------------------
 # 2-3. INHERITANCE (pewarisan) level 1: keluarga perantara
-#
-# Tulisan class MobilBensin(Kendaraan) dibaca: "MobilBensin adalah anak dari
-# Kendaraan". Artinya MobilBensin otomatis punya semua isi Kendaraan
-# (nama, plat, info(), get_harga(), dst) tanpa menulis ulang. Enak, kan?
-# Yang tersisa tinggal mengisi method abstrak tadi.
 # ----------------------------------------------------------
 class MobilBensin(Kendaraan):
     def bahan_bakar(self):                    # mengisi method abstrak dari induk
@@ -179,7 +161,7 @@ class Garasi:
         self.isi = []                         # PUBLIC: list kosong, nanti diisi kendaraan
     def tambah(self, k):
         self.isi.append(k)                    # mobil cuma "dititipkan", bukan dibuat di sini
-    def to_dict(self):                        # TAMBAHAN: untuk JSON
+    def to_dict(self):
         return {"nama": self.nama, "isi": [k.to_dict() for k in self.isi]}
 
 
@@ -191,7 +173,7 @@ class Pelanggan:
         self.nama = nama                      # PUBLIC
         self.no_ktp = no_ktp                  # PUBLIC di kode ini. Di dunia nyata no KTP itu data sensitif,
                                               #   idealnya dibuat private. Dibiarkan public supaya kode tetap sederhana
-    def to_dict(self):                        # TAMBAHAN
+    def to_dict(self):
         return {"nama": self.nama, "no_ktp": self.no_ktp}
 
 
@@ -207,7 +189,7 @@ class Transaksi:
         self.pelanggan = pelanggan            # PUBLIC: menunjuk ke objek Pelanggan
         self.kendaraan = kendaraan            # PUBLIC: menunjuk ke objek Kendaraan (bisa Avanza, Tesla, apa pun)
         self.hari = hari                      # PUBLIC: lama sewa
-        self.aktif = True                     # TAMBAHAN, PUBLIC: True = masih disewa, False = sudah dikembalikan
+        self.aktif = True                     # PUBLIC: True = masih disewa, False = sudah dikembalikan
         kendaraan.tersedia = False            # begitu disewa, kendaraan otomatis berstatus tidak tersedia
     def total(self):
         # POLYMORPHISM yang paling keren ada di sini. Kita cuma menulis satu baris
@@ -217,10 +199,10 @@ class Transaksi:
         return self.kendaraan.biaya_sewa(self.hari)
     def struk(self):
         return f"{self.pelanggan.nama} menyewa {self.kendaraan.nama} {self.hari} hari = Rp{self.total():,.0f}"
-    def selesai(self):                        # TAMBAHAN: dipanggil saat mobil dikembalikan
+    def selesai(self):                        #dipanggil saat mobil dikembalikan
         self.aktif = False
         self.kendaraan.tersedia = True        # mobil bisa disewa lagi
-    def to_dict(self):                        # TAMBAHAN: yang disimpan cukup no KTP dan plat sebagai "penunjuk"
+    def to_dict(self):                        # yang disimpan cukup no KTP dan plat sebagai "penunjuk"
         return {"no_ktp": self.pelanggan.no_ktp, "plat": self.kendaraan.plat,
                 "hari": self.hari, "aktif": self.aktif}
 
@@ -237,7 +219,7 @@ class Montir:
         # montir memang "orang dalam" sistem rental, yang berhak memperbaiki kondisi.
         k._kondisi = 100
         return f"{self.nama} mengservis {k.nama}: kondisi prima!"
-    def to_dict(self):                        # TAMBAHAN
+    def to_dict(self):
         return {"nama": self.nama}
 
 
@@ -249,8 +231,8 @@ class RentalMobil:
         self.nama = nama                      # PUBLIC
         self.garasi = []                      # AGGREGATION: menampung garasi-garasi yang dibuat di luar
         self.transaksi = []                   # menampung catatan transaksi
-        self.pelanggan = []                   # TAMBAHAN: daftar pelanggan yang terdaftar
-        self.montir = []                      # TAMBAHAN: daftar montir
+        self.pelanggan = []                   # daftar pelanggan yang terdaftar
+        self.montir = []                      # daftar montir
     def tambah_garasi(self, g):
         self.garasi.append(g)
     def sewa(self, pelanggan, kendaraan, hari):
@@ -309,7 +291,7 @@ class RentalMobil:
 
 
 # ==========================================================
-# TAMBAHAN: fungsi bantu, data awal, dan menu input
+# fungsi bantu, data awal, dan menu input
 # (semuanya fungsi biasa, BUKAN class baru)
 # ==========================================================
 TIPE = {"Avanza": Avanza, "Brio": Brio, "Tesla": Tesla}
